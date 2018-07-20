@@ -308,3 +308,6 @@ var i = setInterval((function(){
 })(),1000);
 
 setInterval(function(){document.title=new Date().toTimeString()}, 1000)
+
+
+var test = 'this is the test of githb.';
