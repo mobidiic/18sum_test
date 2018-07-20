@@ -310,4 +310,4 @@ var i = setInterval((function(){
 setInterval(function(){document.title=new Date().toTimeString()}, 1000)
 
 
-var test = 'this is the test of githb.';
+var branchtest = 'this is the test of branch'
