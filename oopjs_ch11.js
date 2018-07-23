@@ -53,3 +53,9 @@ MYAPP.dom.Element = function(type, properties){
 MYAPP.dom.Text = function(txt){
   return document.createElement(txt);
 }
+
+
+var link = new MYAPP.dom.Element('a', {href: 'http://google.com', target:'_blank'});
+var text = new MYAPP.dom.Text('click me');
+link.appendChild(text);
+document.body.appendChild(link);
