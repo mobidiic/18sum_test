@@ -59,3 +59,151 @@ var link = new MYAPP.dom.Element('a', {href: 'http://google.com', target:'_blank
 var text = new MYAPP.dom.Text('click me');
 link.appendChild(text);
 document.body.appendChild(link);
+
+
+MYAPP = {};
+MYAPP.namespace = function (name){
+  var parts = name.split('.');
+  var current = MYAPP;
+  for (var i=0; i<parts.length; i++){
+    if(!current[parts[i]]){
+      current[parts[i]]={};
+    }
+    current = current[parts[i]];
+  }
+};
+MYAPP.namespace('dom.style');
+MYAPP.namespace('events');
+
+
+
+
+//초기화 시간 분기
+var MYAPP ={};
+MYAPP.event = {
+  addListener : null,
+  removeListener : null
+};
+
+if(window.addEventListener){
+  MYAPP.event.addListener = function(el, type, fn){
+    el.addEventListener(type, fn, false);
+  };
+  MYAPP.event.removeListener = function(el, type, fn){
+    el.removeEventListener(type, fn, false);
+  };
+}else if(document.attachEvent){//IE
+  MYAPP.event.addListener = function(el, type, fn){
+    el.attachEvent('on'+type, fn);
+  }
+  MYAPP.event.removeListener = function(el, type, fn){
+    el.detachEvent('on'+type, fn);
+  }
+}else{//구형 브라우져
+  MYAPP.event.addListener = function(el, type, fn){
+    el['on'+type]= fn;
+  }
+  MYAPP.event.removeListener= function(el, type, fn){
+    el['on'+type]= null;
+  }
+}
+
+
+//지연 정의
+
+var MYAPP ={};
+MYAPP.event = {
+  addListener: function(el, type, fn){
+    if(el.addEventListener){
+      MYAPP.event.addListener = function(el, type, fn){
+        el.addEventListener(type, fn, false);
+      }
+    }else if(el.attchEvent){
+      MYAPP.event.addListener = function(el, type, fn){
+        el.attachEvent('on'+type, fn);
+      }
+    }else{
+      MYAPP.event.addListener = function(el, type, fn){
+        el['on'+type]=fn;
+      }
+    }
+    MYAPP.event.addListener(el, type, fn);
+  }
+}//위에꺼와 다른점은 이 메소드가 호출됐을 때 처음 한번만 정의된다. 위에꺼는 로드될때 한번만 정의된다.
+
+
+MYAPP.dom.Fancybutton= function (txt, conf){
+  var style = {
+    font : 'Verdana',
+    border : '1px solid black',
+    color : 'black',
+    background : 'grey'
+  };
+  function setStyle(b){
+    var i;
+    for (i in style){
+      if(style.hasOwnProperty(i)){
+        b.style[i] = conf[i] || style[i];
+      }
+    }
+  }
+  conf =conf || {};
+  var b = document.createElement('input');
+  b.type=conf.type || 'submit';
+  b.value = txt;
+  setStyle(b);
+  return b;
+};
+
+
+
+//JSON string
+{
+  'name' : 'sihh',
+  'family' : 'park'
+}
+var response = JSON.parse(xhr.responseText); //json에서 객체로
+var str = JSON.stringify({hello: 'you'}); // 일반객체를 json으로
+
+
+
+//장식자 패턴
+
+var tree={};
+tree.decorate = function(){
+  alert('Make sure the tree won\'t fall');
+};
+tree.getDecorator = function(deco){
+  tree[deco].prototype = this;
+  return new tree[deco];
+};
+
+tree.Redballs = function(){
+  this.decorate = function(){
+    this.Redballs.prototype.decorate();
+    alert('Put on some red balls');
+  };
+};
+
+tree.Angel = function(){
+  this.decorate = function(){
+    this.Angel.prototype.decorate();
+    alert('An angel on the top');
+  };
+};
+
+tree.getDecorator('Redballs');
+tree.getDecorator('Angel');
+tree.decorate();
+
+
+
+//믹스인 패턴
+function mixin(receiver, supplier) {
+	for (var property in supplier) {
+		if(supplier.hasOwnProperty(property)){
+			receiver[property] = supplier[property]
+		}
+	}
+	return receiver;
+}
